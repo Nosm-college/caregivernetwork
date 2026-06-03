@@ -46,7 +46,7 @@ export default function Navbar() {
       <div className="navbar-inner">
         {/* Brand */}
         <Link to="/" className="navbar-brand">
-          <img src="/src/assets/logo.png" alt="CareJobsUK Logo" className="logo" />
+          <img src="/logo.png" alt="CareJobsUK Logo" className="logo" />
         </Link>
 
         {/* Search */}
