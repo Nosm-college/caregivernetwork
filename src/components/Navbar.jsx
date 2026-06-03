@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Briefcase, Menu, X, Search, User, LogOut, ChevronDown, Building2, Settings } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/logo.png';
 import AccountPage from '../pages/AccountPage';
 import './Navbar.css';
 export default function Navbar() {
@@ -47,7 +48,7 @@ export default function Navbar() {
       <div className="navbar-inner">
         {/* Brand */}
         <Link to="/" className="navbar-brand">
-          <img src="/assets/logo.png" alt="CareJobsUK Logo" className="logo" />
+          <img src={logo} alt="CareJobsUK Logo" className="logo" />
         </Link>
 
         {/* Search */}
