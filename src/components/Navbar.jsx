@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Briefcase, Menu, X, Search, User, LogOut, ChevronDown, Building2, Settings } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import AccountPage from '../pages/AccountPage';
 import './Navbar.css';
 export default function Navbar() {
   const { user, profile, logout } = useAuth();

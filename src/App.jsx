@@ -7,6 +7,7 @@ import CategoriesPage from "./pages/CategoriesPage";
 import LoginPage from "./pages/LoginPage"; // 👈 add this
 import RegisterPage from "./pages/RegisterPage"; // 👈 add this
 import { AuthProvider } from "./context/AuthContext";
+import AccountPage from "./pages/AccountPage";
 import "./App.css";
 import JobseekerProfilePage from './pages/JobseekerProfilePage';
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
               <Route path="/categories" element={<CategoriesPage />} />
               <Route path="/login" element={<LoginPage />} />{" "}
               <Route path="/profile" element={<JobseekerProfilePage />} />
+              <Route path="/account" element={<AccountPage />} />
               {/* 👈 add this */}
               <Route path="/register" element={<RegisterPage />} />{" "}
               {/* 👈 add this */}
