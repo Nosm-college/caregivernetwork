@@ -469,7 +469,7 @@ export default function CookiePolicyPage() {
             can control them.
           </p>
           <p className="cp-updated">
-            Last updated: 4 June 2025 · Applies to carejobsuk.co.uk
+            Last updated: 4 June 2025 · Applies to caregivernetwork.co.uk
           </p>
         </div>
         <div className="cp-hero-dots" aria-hidden="true">
@@ -666,9 +666,9 @@ export default function CookiePolicyPage() {
             please contact our Data Protection Officer:
           </p>
           <p>
-            <strong>Email:</strong> privacy@carejobsuk.co.uk
+            <strong>Email:</strong> privacy@caregivernetwork.co.uk
             <br />
-            <strong>ICO Registration:</strong> ZB123456 (placeholder)
+            <strong>ICO Registration:</strong> ZB123456 
             <br />
             <strong>ICO Website:</strong>{" "}
             <a

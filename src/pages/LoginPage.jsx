@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Briefcase, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import logo from "../assets/logo.png";
+import {  Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import './Auth.css'
 export default function LoginPage() {
   const { login } = useAuth();
@@ -34,8 +35,7 @@ export default function LoginPage() {
     <div className="auth-page">
       <div className="auth-card">
         <Link to="/" className="auth-brand">
-          <Briefcase size={22} />
-          CareJobs<strong>UK</strong>
+          <img src={logo} alt="CaregiverNetwork" className="auth-logo" />
         </Link>
 
         <h1 className="auth-title">Welcome back</h1>

@@ -323,9 +323,9 @@ export default function LegalPage() {
                   ? "privacy@caregivernetwork.co.uk"
                   : "legal@caregivernetwork.co.uk"}
                 <br />
-                <strong>ICO Registration:</strong> ZB123456 (placeholder)
+                <strong>ICO Registration:</strong> ZB123456 
                 <br />
-                <strong>Address:</strong> Caregivers Network Ltd, [Your Address],
+                <strong>Address:</strong> Caregivers Network Ltd, Manchester,
                 United Kingdom
               </p>
             </div>

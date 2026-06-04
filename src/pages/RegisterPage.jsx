@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo.png";
 import './Auth.css'
 import {
   Briefcase,
@@ -69,8 +70,7 @@ export default function RegisterPage() {
     <div className="auth-page">
       <div className="auth-card">
         <Link to="/" className="auth-brand">
-          <Briefcase size={22} />
-          CareJobs<strong>UK</strong>
+          <img src={logo} alt="CaregiverNetwork" className="auth-logo" />
         </Link>
 
         <h1 className="auth-title">Create your account</h1>
