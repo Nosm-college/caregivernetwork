@@ -8,7 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import { AuthProvider } from "./context/AuthContext";
 import AccountPage from "./pages/AccountPage";
-import bcorp from './assets/bcorporation.png';
+import bcorp from './assets/bcorportation.png';
 import "./App.css";
 import JobseekerProfilePage from './pages/JobseekerProfilePage';
 import { useState } from "react";
