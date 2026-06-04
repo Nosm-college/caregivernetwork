@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import './AccountPage.css';
 import { User, Building2, Mail, Briefcase, LogOut, ChevronRight, Shield, Settings } from 'lucide-react';
 export default function AccountPage() {
   const { user, profile, logout } = useAuth();
