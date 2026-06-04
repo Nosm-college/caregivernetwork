@@ -10,7 +10,7 @@ function getDaysAgo(timestamp) {
 
 export default function JobCard({ job }) {
   const {
-    id, title, company, location, contractType, salary, salaryRange,
+    id, title, company, location, contractType, salary,
     category, isVacant, featured, createdAt, description
   } = job;
 
