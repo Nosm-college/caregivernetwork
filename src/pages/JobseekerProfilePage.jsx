@@ -162,7 +162,7 @@ const applyingToJobId = searchParams.get('applyTo');
     if (!user) return;
     (async () => {
       try {
-        const snap = await getDoc(doc(db, "users", user.uid));
+        const snap = await getDoc(doc(db, "jobseekers", user.uid));
         if (snap.exists() && snap.data().profile) {
           setProfile({ ...emptyProfile, ...snap.data().profile });
         }
@@ -214,10 +214,10 @@ const applyingToJobId = searchParams.get('applyTo');
     setSaveStatus(null);
     try {
       await setDoc(
-        doc(db, "users", user.uid),
-        { profile: { ...profile, updatedAt: serverTimestamp() } },
-        { merge: true },
-      );
+  doc(db, "jobseekers", user.uid),  
+  { profile: { ...profile, updatedAt: serverTimestamp() } },
+  { merge: true },
+);
       setSaveStatus("success");
       setTimeout(() => setSaveStatus(null), 3000);
     } catch (e) {
@@ -252,7 +252,7 @@ const applyingToJobId = searchParams.get('applyTo');
       const updatedDocs = { ...profile.documents, [docKey]: publicUrl };
       setProfile((p) => ({ ...p, documents: updatedDocs }));
       await setDoc(
-        doc(db, "users", user.uid),
+        doc(db, "jobseekers", user.uid),
         { profile: { documents: updatedDocs, updatedAt: serverTimestamp() } },
         { merge: true },
       );
@@ -274,7 +274,7 @@ const applyingToJobId = searchParams.get('applyTo');
     setProfile((p) => ({ ...p, documents: updatedDocs }));
     setUploadState((p) => ({ ...p, [docKey]: {} }));
     await setDoc(
-      doc(db, "users", user.uid),
+      doc(db, "jobseekers", user.uid),
       { profile: { documents: updatedDocs, updatedAt: serverTimestamp() } },
       { merge: true },
     );
