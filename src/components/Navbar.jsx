@@ -47,7 +47,7 @@ export default function Navbar() {
       <div className="navbar-inner">
         {/* Brand */}
         <Link to="/" className="navbar-brand">
-          <img src={logo} alt="CareJobsUK Logo" className="logo" />
+          <img src={logo} alt="CaregiverNetwork Logo" className="logo" />
         </Link>
 
         {/* Search */}

@@ -12,7 +12,9 @@ import bcorp from './assets/bcorportation.png';
 import "./App.css";
 import JobseekerProfilePage from './pages/JobseekerProfilePage';
 import { useState } from "react";
-
+import LegalPage from "./pages/LegalPage";
+import { CookieBanner } from "./pages/CookiePage";
+import CookiePolicyPage from "./pages/CookiePage";
 function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
@@ -34,7 +36,7 @@ function Footer() {
 
           {/* Brand */}
           <div className="footer-brand">
-            <p className="footer-brand-name">CareJobsUK</p>
+            <p className="footer-brand-name">CaregiverNetwork</p>
             <p className="footer-tagline">The UK's leading healthcare &amp; care jobs board. Helping connect care professionals with the roles they deserve.</p>
 
             {/* B Corp logo */}
@@ -89,7 +91,7 @@ function Footer() {
 
         {/* Bottom row */}
         <div className="footer-bottom">
-          <p className="footer-copy">© 2025 CareJobsUK. All rights reserved.</p>
+          <p className="footer-copy">© 2025 CaregiverNetwork. All rights reserved.</p>
 
           {/* Social icons */}
           <div className="footer-socials">
@@ -120,8 +122,8 @@ function Footer() {
           </div>
 
           <div className="footer-legal">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Use</a>
+            <a href="/legal">Privacy Policy</a>
+            <a href="/legal">Terms of Use</a>
             <a href="#">Cookie Policy</a>
           </div>
         </div>
@@ -133,12 +135,15 @@ function Footer() {
 
 export default function App() {
   return (
+    <>
+      <CookieBanner /> 
     <BrowserRouter>
       <AuthProvider>
         <div className="app">
           <Navbar />
           <main className="app-main">
             <Routes>
+              <Route path="/cookie-policy" element={<CookiePolicyPage />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/job/:id" element={<JobDetailPage />} />
               <Route path="/post-job" element={<PostJobPage />} />
@@ -147,11 +152,13 @@ export default function App() {
               <Route path="/profile" element={<JobseekerProfilePage />} />
               <Route path="/account" element={<AccountPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/legal" element={<LegalPage />} />
             </Routes>
           </main>
           <Footer />
         </div>
       </AuthProvider>
     </BrowserRouter>
+</>
   );
 }

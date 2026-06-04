@@ -39,7 +39,7 @@ export default function LoginPage() {
         </Link>
 
         <h1 className="auth-title">Welcome back</h1>
-        <p className="auth-sub">Sign in to your CareJobsUK account</p>
+        <p className="auth-sub">Sign in to your CaregiverNetwork account</p>
 
         {location.state?.message && (
           <div className="auth-info">{location.state.message}</div>
@@ -103,7 +103,7 @@ export default function LoginPage() {
         </form>
 
         <div className="auth-divider">
-          <span>New to CareJobsUK?</span>
+          <span>New to CaregiverNetwork?</span>
         </div>
 
         <div className="auth-register-options">

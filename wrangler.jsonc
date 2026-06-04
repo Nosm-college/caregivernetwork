@@ -1,5 +1,5 @@
 {
-	// CareJobsUK — Cloudflare Worker config (JSONC format)
+	// CaregiverNetwork — Cloudflare Worker config (JSONC format)
 	"name": "carejobsuk-documents",
 	"main": "worker.js",
 	"compatibility_date": "2024-01-01",
