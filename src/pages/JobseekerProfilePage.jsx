@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { db } from "../firebase/config";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { uploadToR2, validateFile } from "../utils/r2Upload";
@@ -145,6 +146,9 @@ const emptyProfile = {
 // ─── Component ───────────────────────────────────────────────
 export default function JobseekerProfilePage() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+const navigate = useNavigate();
+const applyingToJobId = searchParams.get('applyTo');
   const [profile, setProfile] = useState(emptyProfile);
   const [openSections, setOpenSections] = useState({ personal: true });
   const [saving, setSaving] = useState(false);
@@ -335,7 +339,32 @@ export default function JobseekerProfilePage() {
           </div>
         </div>
       </div>
-
+{applyingToJobId && (
+  <div className="apply-banner">
+    <CheckCircle2 size={18} />
+    <div>
+      <strong>You're applying for a job</strong>
+      <p>Complete your profile below, then click Submit Application.</p>
+    </div>
+    <button
+      className="submit-application-btn"
+      onClick={async () => {
+        await handleSave();
+        // Save the application to Firestore
+        await setDoc(doc(db, 'applications', `${user.uid}_${applyingToJobId}`), {
+          userId: user.uid,
+          jobId: applyingToJobId,
+          appliedAt: serverTimestamp(),
+          status: 'pending',
+          cvUrl: profile.documents.cv || null,
+        }, { merge: true });
+        navigate(`/jobs/${applyingToJobId}?applied=true`);
+      }}
+    >
+      Submit Application →
+    </button>
+  </div>
+)}
       <div className="profile-body">
         {/* Accordion sections */}
         <div className="profile-sections">

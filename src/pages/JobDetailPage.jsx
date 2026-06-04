@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getJob, incrementViews } from '../firebase/jobs';
 import { formatDistanceToNow, format } from 'date-fns';
 import { MapPin, Clock, Briefcase, PoundSterling, AlertCircle, ChevronLeft, Eye, CheckCircle, Building2, Share2 } from 'lucide-react';
 
 export default function JobDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
-
+const [searchParams] = useSearchParams();
+const applied = searchParams.get('applied');
   useEffect(() => {
     async function load() {
       try {
@@ -112,10 +114,19 @@ export default function JobDetailPage() {
                   {job.isVacant ? '✅ Actively Hiring' : '🔴 No Longer Vacant'}
                 </p>
               </div>
-
+{applied && (
+  <div className="apply-success">
+    <CheckCircle size={18} /> Application submitted successfully!
+  </div>
+)}
               {job.isVacant ? (
-                <button className="apply-btn-main">Apply Now →</button>
-              ) : (
+  <button 
+    className="apply-btn-main"
+    onClick={() => navigate(`/profile?applyTo=${job.id}`)}
+  >
+    Apply Now →
+  </button>
+) : (
                 <div className="closed-note">
                   <AlertCircle size={16} />
                   This vacancy has been filled
