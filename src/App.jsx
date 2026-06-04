@@ -16,17 +16,34 @@ import LegalPage from "./pages/LegalPage";
 import { CookieBanner } from "./pages/CookiePage";
 import CookiePolicyPage from "./pages/CookiePage";
 import ContactPage from "./pages/ContactPage";
+import CareerServicesPage from "./pages/CareerServicesPage";
+import { db } from "./firebase/config";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+
 function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+  const handleSubscribe = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail("");
-    }
-  };
+  try {
+    await addDoc(collection(db, "newsletter_subscribers"), {
+      email: email.toLowerCase().trim(),
+      subscribedAt: serverTimestamp(),
+    });
+    setSubscribed(true);
+  } catch (err) {
+    console.error(err);
+    setError("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <footer className="footer">
@@ -53,6 +70,7 @@ function Footer() {
             <a href="/">Browse Jobs</a>
             <a href="/categories">Job Categories</a>
             <a href="/profile">My Profile</a>
+            <a href="/career-services">Career Services</a>
             <a href="/register">Create Account</a>
           </div>
 
@@ -61,7 +79,7 @@ function Footer() {
             <a href="/post-job">Post a Job</a>
             <a href="/account">Employer Dashboard</a>
             <a href="#">Pricing</a>
-            <a href="#">Contact Us</a>
+            <a href="/contact">Contact Us</a>
           </div>
 
           {/* Newsletter */}
@@ -74,15 +92,18 @@ function Footer() {
               </div>
             ) : (
               <form className="footer-subscribe-form" onSubmit={handleSubscribe}>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                />
-                <button type="submit">Subscribe</button>
-              </form>
+  <input
+    type="email"
+    placeholder="your@email.com"
+    value={email}
+    onChange={e => setEmail(e.target.value)}
+    required
+  />
+  <button type="submit" disabled={loading}>
+    {loading ? "Subscribing..." : "Subscribe"}
+  </button>
+  {error && <p className="subscribe-error">{error}</p>}
+</form>
             )}
           </div>
         </div>
@@ -131,6 +152,7 @@ function Footer() {
 
       </div>
     </footer>
+    
   );
 }
 
@@ -154,6 +176,7 @@ export default function App() {
               <Route path="/account" element={<AccountPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/career-services" element={<CareerServicesPage />} />
               <Route path="/legal" element={<LegalPage />} />
             </Routes>
           </main>

@@ -4,6 +4,7 @@ import { getJobs, searchJobs, seedSampleJobs } from "../firebase/jobs";
 import JobCard from "../components/JobCard";
 import FilterSidebar from "../components/FilterSidebar";
 import TrustedCompanies from "../components/TrustedCompanies";
+import CareerServicesSection from "../components/CareerServicesSection";
 import {
   Search,
   Loader2,
@@ -257,6 +258,7 @@ export default function HomePage() {
         </div>
       </div>
    <TrustedCompanies />
+
       {/* Main content */}
       <div className="main-layout">
         <FilterSidebar
@@ -372,6 +374,7 @@ export default function HomePage() {
           )}
         </div>
       </div>
+         <CareerServicesSection />
     </div>
   );
 }

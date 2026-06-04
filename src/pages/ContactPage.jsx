@@ -495,7 +495,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h4>Email us</h4>
-                <p>hello@caregivernetwork.co.uk</p>
+                <p>support@caregivernetwork.co.uk</p>
               </div>
             </div>
             <div className="info-card">
