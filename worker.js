@@ -84,7 +84,9 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: cors });
     }
-
+if (request.method === 'POST' && url.pathname === '/api/r2/upload') {
+  return handleUpload(request, env, cors);
+}
     // Only handle POST /api/r2/presign
     if (request.method === 'POST' && url.pathname === '/api/r2/presign') {
       return handlePresign(request, env, cors);
@@ -93,7 +95,26 @@ export default {
     return json({ error: 'Not found' }, 404, cors);
   },
 };
+async function handleUpload(request, env, cors) {
+  const docType = url.searchParams.get('docType');
+  const userId = url.searchParams.get('userId');
+  const fileName = url.searchParams.get('fileName');
 
+  const rules = ALLOWED[docType];
+  if (!rules) return json({ error: 'Invalid docType' }, 400, cors);
+
+  const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const storageKey = `${userId}/${docType}/${Date.now()}_${safeFileName}`;
+
+  const fileBuffer = await request.arrayBuffer();
+
+  await env.DOCUMENTS_BUCKET.put(storageKey, fileBuffer, {
+    httpMetadata: { contentType: request.headers.get('Content-Type') }
+  });
+
+  const publicUrl = `${env.R2_PUBLIC_URL}/${storageKey}`;
+  return json({ publicUrl }, 200, cors);
+}
 // ── Presign handler ────────────────────────────────────────────
 async function handlePresign(request, env, cors) {
   // 1. Parse body

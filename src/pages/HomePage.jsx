@@ -122,6 +122,7 @@ export default function HomePage() {
   // ── Reset + reload when filters or search changes ────────────
   useEffect(() => {
     pageCacheRef.current = {};
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
     setTotalCount(0);
     loadPage(1, true);
@@ -130,6 +131,7 @@ export default function HomePage() {
   // ── Load when page number changes (but not on filter change) ─
   useEffect(() => {
     if (currentPage === 1) return; // already handled by filter effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadPage(currentPage);
   }, [currentPage]); // eslint-disable-line react-hooks/exhaustive-deps
 

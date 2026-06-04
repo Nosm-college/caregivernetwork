@@ -8,8 +8,7 @@
  *   3. Return publicUrl to caller so it can be saved to Firestore
  */
 
-const PRESIGN_ENDPOINT =
-  import.meta.env.VITE_R2_PRESIGN_ENDPOINT || "/api/r2/presign";
+const WORKER_ENDPOINT = import.meta.env.VITE_R2_PRESIGN_ENDPOINT;
 
 /**
  * @param {File}     file        - The File object to upload
@@ -18,49 +17,21 @@ const PRESIGN_ENDPOINT =
  * @param {function} onProgress  - optional callback(percent: number)
  * @returns {Promise<string>}    - Public URL of the uploaded file
  */
-export async function uploadToR2(file, userId, docType, onProgress) {
-  // 1. Ask the Worker for a presigned URL
-  //    We send fileSize so the Worker can enforce size limits server-side
-  const presignRes = await fetch(PRESIGN_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId,
-      docType,
-      fileName: file.name,
-      fileType: file.type,
-      fileSize: file.size,
-    }),
+export async function uploadToR2(file, userId, docType) {
+  const params = new URLSearchParams({ userId, docType, fileName: file.name });
+  
+  const res = await fetch(`${WORKER_ENDPOINT}?${params}`, {
+    method: 'POST',
+    headers: { 'Content-Type': file.type },
+    body: file,
   });
 
-  if (!presignRes.ok) {
-    const err = await presignRes.json().catch(() => ({}));
-    throw new Error(err.error || "Failed to get upload URL");
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Upload failed');
   }
 
-  const { uploadUrl, publicUrl } = await presignRes.json();
-
-  // 2. PUT the file directly to R2
-  await new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", uploadUrl);
-    xhr.setRequestHeader("Content-Type", file.type);
-
-    xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable && onProgress) {
-        onProgress(Math.round((e.loaded / e.total) * 100));
-      }
-    };
-
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) resolve();
-      else reject(new Error(`Upload failed (${xhr.status})`));
-    };
-
-    xhr.onerror = () => reject(new Error("Network error during upload"));
-    xhr.send(file);
-  });
-
+  const { publicUrl } = await res.json();
   return publicUrl;
 }
 
