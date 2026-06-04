@@ -15,6 +15,7 @@ import { useState } from "react";
 import LegalPage from "./pages/LegalPage";
 import { CookieBanner } from "./pages/CookiePage";
 import CookiePolicyPage from "./pages/CookiePage";
+import ContactPage from "./pages/ContactPage";
 function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
@@ -152,6 +153,7 @@ export default function App() {
               <Route path="/profile" element={<JobseekerProfilePage />} />
               <Route path="/account" element={<AccountPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/contact" element={<ContactPage />} />
               <Route path="/legal" element={<LegalPage />} />
             </Routes>
           </main>
