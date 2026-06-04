@@ -4,7 +4,6 @@ import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 import './Auth.css'
 import {
-  Briefcase,
   User,
   Building2,
   Mail,
