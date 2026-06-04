@@ -10,11 +10,6 @@
 		{
 			"binding": "DOCUMENTS_BUCKET",
 			"bucket_name": "carejobsuk-documents"
-		},
-		{
-			"bucket_name": "carejobs-documents",
-			"binding": "carejobs_documents",
-			"remote": true
 		}
 	],
 	// ── Environment variables ────────────────────────────────────
@@ -28,7 +23,7 @@
 	//   R2_PUBLIC_URL=https://pub-xxxxxxxxxxxx.r2.dev
 	"vars": {
 		"ALLOWED_ORIGIN": "https://caregivernetwork.co.uk",
-		"R2_PUBLIC_URL": "https://carejobsuk-documents.karabojomane.workers.dev"
+		"R2_PUBLIC_URL": "https://pub-c8bfe9b4ba2b46769d74c32c84486b52.r2.dev"
 
 	}
 	// ── Routes (uncomment once deployed to your domain) ──────────

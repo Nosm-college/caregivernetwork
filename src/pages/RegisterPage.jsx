@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 import './Auth.css'
@@ -17,7 +17,8 @@ import {
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/';
   const [role, setRole] = useState("jobseeker"); // 'jobseeker' | 'employer'
   const [form, setForm] = useState({
     displayName: "",
@@ -58,7 +59,7 @@ export default function RegisterPage() {
         role,
         company: role === "employer" ? form.company : null,
       });
-      navigate("/");
+      navigate(redirectTo)
     } catch (err) {
       setError(friendlyError(err.code));
     }

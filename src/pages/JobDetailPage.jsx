@@ -3,8 +3,9 @@ import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { getJob, incrementViews } from '../firebase/jobs';
 import { formatDistanceToNow, format } from 'date-fns';
 import { MapPin, Clock, Briefcase, PoundSterling, AlertCircle, ChevronLeft, Eye, CheckCircle, Building2, Share2 } from 'lucide-react';
-
+import { useAuth } from '../context/AuthContext';
 export default function JobDetailPage() {
+  const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
@@ -120,12 +121,18 @@ const applied = searchParams.get('applied');
   </div>
 )}
               {job.isVacant ? (
-  <button 
-    className="apply-btn-main"
-    onClick={() => navigate(`/profile?applyTo=${job.id}`)}
-  >
-    Apply Now →
-  </button>
+ <button
+  className="apply-btn-main"
+  onClick={() => {
+    if (!user) {
+      navigate(`/register?redirect=/jobs/${job.id}`);
+    } else {
+      navigate(`/profile?applyTo=${job.id}`);
+    }
+  }}
+>
+  Apply Now →
+</button>
 ) : (
                 <div className="closed-note">
                   <AlertCircle size={16} />

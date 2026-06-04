@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 import {  Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
@@ -8,8 +8,9 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || "/";
-
+const [searchParams] = useSearchParams();
+const from = searchParams.get('redirect') || location.state?.from || "/";
+const redirectParam = searchParams.get('redirect') ? `&redirect=${searchParams.get('redirect')}` : '';
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -107,18 +108,12 @@ export default function LoginPage() {
         </div>
 
         <div className="auth-register-options">
-          <Link
-            to="/register?role=jobseeker"
-            className="auth-register-btn jobseeker"
-          >
-            Register as Job Seeker
-          </Link>
-          <Link
-            to="/register?role=employer"
-            className="auth-register-btn employer"
-          >
-            Register as Employer
-          </Link>
+          <Link to={`/register?role=jobseeker${redirectParam}`} className="auth-register-btn jobseeker">
+  Register as Job Seeker
+</Link>
+<Link to={`/register?role=employer${redirectParam}`} className="auth-register-btn employer">
+  Register as Employer
+</Link>
         </div>
 
         <p className="auth-switch">

@@ -80,6 +80,12 @@ export default {
 };
 
 async function handlePresign(request, env, cors) {
+let verifiedUid;
+  try {
+    verifiedUid = await verifyFirebaseToken(request, env);
+  } catch {
+    return json({ error: "Unauthorised" }, 401, cors);
+  }
   let body;
   try {
     body = await request.json();
@@ -87,8 +93,8 @@ async function handlePresign(request, env, cors) {
     return json({ error: "Invalid JSON body" }, 400, cors);
   }
 
-  const { userId, docType, fileName, fileType, fileSize } = body;
-
+   const { docType, fileName, fileType, fileSize } = body;
+const userId = verifiedUid;
   if (!userId || !docType || !fileName || !fileType || !fileSize) {
     return json(
       {
@@ -157,7 +163,24 @@ async function handlePresign(request, env, cors) {
 
   return json({ storageKey, publicUrl }, 200, cors);
 }
+async function verifyFirebaseToken(request, env) {
+  const authHeader = request.headers.get("Authorization") || "";
+  const token = authHeader.replace("Bearer ", "");
+  if (!token) throw new Error("No token");
 
+  // Firebase public key verification via Google's endpoint
+  const res = await fetch(
+    `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${env.FIREBASE_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken: token }),
+    }
+  );
+  const data = await res.json();
+  if (data.error) throw new Error("Invalid token");
+  return data.users[0].localId; // verified uid
+}
 async function handleUpload(request, env, cors, url) {
   const storageKey = url.searchParams.get("key");
   if (!storageKey) {
