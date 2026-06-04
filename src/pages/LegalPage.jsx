@@ -8,7 +8,7 @@ const SECTIONS = {
       title: "1. Introduction",
       content: `Caregivers Network ("we", "us", or "our") is committed to protecting your personal data in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018. This Privacy Policy explains how we collect, use, store, and protect your information when you use our website and services.
 
-Our registered address is in the United Kingdom. If you have any questions about this policy, please contact our Data Protection Officer at privacy@carejobsuk.co.uk.`,
+Our registered address is in the United Kingdom. If you have any questions about this policy, please contact our Data Protection Officer at privacy@caregivernetwork.co.uk.`,
     },
     {
       id: "data-collected",
@@ -74,7 +74,7 @@ You may request deletion of your data at any time (see Your Rights below), subje
 • Right to Object: object to processing based on legitimate interests or for direct marketing.
 • Rights Related to Automated Decision-Making: request human review of automated decisions.
 
-To exercise any of these rights, contact us at privacy@carejobsuk.co.uk. We will respond within 30 days. You also have the right to lodge a complaint with the Information Commissioner's Office (ICO) at ico.org.uk.`,
+To exercise any of these rights, contact us at privacy@caregivernetwork.co.uk. We will respond within 30 days. You also have the right to lodge a complaint with the Information Commissioner's Office (ICO) at ico.org.uk.`,
     },
     {
       id: "cookies",
@@ -93,7 +93,7 @@ You can manage your cookie preferences through our cookie banner or your browser
       title: "8. Security",
       content: `We implement appropriate technical and organisational measures to protect your data against unauthorised access, loss, or disclosure. These include encryption in transit (TLS), access controls, regular security assessments, and staff training.
 
-However, no internet transmission is completely secure. If you suspect a data breach, please contact us immediately at security@carejobsuk.co.uk. We will notify affected individuals and the ICO within 72 hours as required by UK GDPR where applicable.`,
+However, no internet transmission is completely secure. If you suspect a data breach, please contact us immediately at security@caregivernetwork.co.uk. We will notify affected individuals and the ICO within 72 hours as required by UK GDPR where applicable.`,
     },
     {
       id: "changes",
@@ -209,7 +209,7 @@ Upon termination, your right to use the Service ceases. Provisions that by their
       title: "10. Governing Law & Disputes",
       content: `These Terms of Use are governed by the laws of England and Wales. Any disputes arising from or relating to these terms or your use of the Service shall be subject to the exclusive jurisdiction of the courts of England and Wales.
 
-We encourage you to contact us first to resolve any dispute informally at legal@carejobsuk.co.uk. We aim to respond within 5 business days.
+We encourage you to contact us first to resolve any dispute informally at legal@caregivernetwork.co.uk. We aim to respond within 5 business days.
 
 If you are a consumer, you may also have the right to use the Online Dispute Resolution platform provided by the European Commission (where applicable) or to seek resolution through the UK courts.`,
     },
@@ -320,8 +320,8 @@ export default function LegalPage() {
               <p>
                 <strong>Email:</strong>{" "}
                 {tab === "privacy"
-                  ? "privacy@carejobsuk.co.uk"
-                  : "legal@carejobsuk.co.uk"}
+                  ? "privacy@caregivernetwork.co.uk"
+                  : "legal@caregivernetwork.co.uk"}
                 <br />
                 <strong>ICO Registration:</strong> ZB123456 (placeholder)
                 <br />
