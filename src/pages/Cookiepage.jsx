@@ -11,13 +11,71 @@ import {
 
 // ─── Cookie Consent Banner ────────────────────────────────────────────────────
 // Drop <CookieBanner /> into your App.jsx root to show the consent banner.
+
+const BANNER_COOKIES = [
+  {
+    key: "necessary",
+    label: "Strictly necessary",
+    desc: "Required for the site to function. Always on.",
+    locked: true,
+  },
+  {
+    key: "performance",
+    label: "Performance & analytics",
+    desc: "Helps us understand how visitors use the site.",
+    locked: false,
+  },
+  {
+    key: "functional",
+    label: "Functional",
+    desc: "Remembers your preferences like saved searches.",
+    locked: false,
+  },
+];
+
+function Toggle({ on, locked, onChange }) {
+  return (
+    <button
+      role="switch"
+      aria-checked={on || locked}
+      onClick={locked ? undefined : onChange}
+      style={{
+        width: 36,
+        height: 20,
+        borderRadius: 99,
+        border: "none",
+        padding: 0,
+        cursor: locked ? "not-allowed" : "pointer",
+        background: on || locked ? "#1d9e75" : "#cbd5e1",
+        position: "relative",
+        flexShrink: 0,
+        transition: "background 0.2s",
+        outline: "none",
+      }}
+    >
+      <span
+        style={{
+          position: "absolute",
+          top: 3,
+          left: 3,
+          width: 14,
+          height: 14,
+          background: "#fff",
+          borderRadius: "50%",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+          transition: "transform 0.2s",
+          transform: on || locked ? "translateX(16px)" : "translateX(0)",
+          display: "block",
+        }}
+      />
+    </button>
+  );
+}
+
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [prefs, setPrefs] = useState({
-    performance: false,
-    functional: false,
-  });
+  const [prefs, setPrefs] = useState({ performance: false, functional: false });
 
   useEffect(() => {
     const saved = localStorage.getItem("cookie_consent");
@@ -35,89 +93,228 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="cb-overlay">
-      <div className="cb-banner">
-        <div className="cb-top">
-          <div className="cb-icon">
-            <Cookie size={20} />
-          </div>
-          <div className="cb-text">
-            <strong>We use cookies</strong>
-            <p>
-              We use strictly necessary cookies to run our site, and optional
-              cookies to improve your experience and analyse traffic. See our{" "}
-              <a href="/cookie-policy">Cookie Policy</a> for details.
-            </p>
-          </div>
-        </div>
+    <>
+      <style>{`
+        .cb-overlay {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: 9999;
+          padding: 16px;
+          display: flex;
+          justify-content: center;
+          pointer-events: none;
+        }
+        .cb-banner {
+          pointer-events: all;
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 16px;
+          box-shadow: 0 4px 32px rgba(15, 23, 42, 0.12), 0 1px 4px rgba(15, 23, 42, 0.06);
+          padding: 18px 20px;
+          max-width: 660px;
+          width: 100%;
+          font-family: 'DM Sans', -apple-system, sans-serif;
+          animation: cb-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes cb-slide-up {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .cb-head {
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+          margin-bottom: 14px;
+        }
+        .cb-head-icon {
+          flex-shrink: 0;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          background: #f1f5f9;
+          border: 1px solid #e2e8f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #0c3b6e;
+        }
+        .cb-head-text strong {
+          display: block;
+          font-size: 14px;
+          font-weight: 600;
+          color: #0f172a;
+          margin-bottom: 3px;
+        }
+        .cb-head-text p {
+          margin: 0;
+          font-size: 13px;
+          color: #64748b;
+          line-height: 1.55;
+        }
+        .cb-head-text a {
+          color: #0c3b6e;
+          font-weight: 500;
+          text-decoration: none;
+        }
+        .cb-head-text a:hover { text-decoration: underline; }
+        .cb-prefs {
+          border: 1px solid #e2e8f0;
+          border-radius: 10px;
+          overflow: hidden;
+          margin-bottom: 14px;
+          animation: cb-expand 0.2s ease;
+        }
+        @keyframes cb-expand {
+          from { opacity: 0; transform: scaleY(0.95); transform-origin: top; }
+          to   { opacity: 1; transform: scaleY(1); }
+        }
+        .cb-prefs-header {
+          padding: 8px 14px;
+          background: #f8fafc;
+          border-bottom: 1px solid #e2e8f0;
+        }
+        .cb-prefs-header span {
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
+          color: #94a3b8;
+        }
+        .cb-pref-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 14px;
+        }
+        .cb-pref-row + .cb-pref-row {
+          border-top: 1px solid #f1f5f9;
+        }
+        .cb-pref-info { flex: 1; }
+        .cb-pref-label {
+          display: block;
+          font-size: 13px;
+          font-weight: 500;
+          color: #1e293b;
+          margin-bottom: 2px;
+        }
+        .cb-pref-desc {
+          display: block;
+          font-size: 12px;
+          color: #94a3b8;
+          line-height: 1.45;
+        }
+        .cb-actions {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+        .cb-manage {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 13px;
+          font-weight: 500;
+          color: #64748b;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          font-family: inherit;
+          transition: color 0.15s;
+        }
+        .cb-manage:hover { color: #0c3b6e; }
+        .cb-btns { display: flex; gap: 8px; }
+        .cb-btn-reject {
+          font-size: 13px;
+          font-weight: 500;
+          padding: 7px 14px;
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          background: #f8fafc;
+          color: #475569;
+          cursor: pointer;
+          font-family: inherit;
+          transition: border-color 0.15s, background 0.15s;
+        }
+        .cb-btn-reject:hover { border-color: #94a3b8; background: #f1f5f9; }
+        .cb-btn-accept {
+          font-size: 13px;
+          font-weight: 600;
+          padding: 7px 18px;
+          border-radius: 8px;
+          border: 1px solid transparent;
+          background: #0c3b6e;
+          color: #ffffff;
+          cursor: pointer;
+          font-family: inherit;
+          transition: background 0.15s;
+        }
+        .cb-btn-accept:hover { background: #0f4c8a; }
+      `}</style>
 
-        {showDetails && (
-          <div className="cb-details">
-            {[
-              {
-                key: "necessary",
-                label: "Strictly Necessary",
-                desc: "Required for the site to function. Always on.",
-                locked: true,
-                on: true,
-              },
-              {
-                key: "performance",
-                label: "Performance & Analytics",
-                desc: "Help us understand how visitors use the site (page views, errors).",
-                locked: false,
-              },
-              {
-                key: "functional",
-                label: "Functional",
-                desc: "Remember your preferences like saved searches and location.",
-                locked: false,
-              },
-            ].map((c) => (
-              <div key={c.key} className="cb-row">
-                <div className="cb-row-info">
-                  <span className="cb-row-label">{c.label}</span>
-                  <span className="cb-row-desc">{c.desc}</span>
-                </div>
-                <div
-                  className={`cb-toggle ${c.locked ? "locked" : prefs[c.key] ? "on" : ""}`}
-                  onClick={() => {
-                    if (!c.locked)
-                      setPrefs((p) => ({ ...p, [c.key]: !p[c.key] }));
-                  }}
-                >
-                  <div className="cb-toggle-knob" />
-                </div>
+      <div className="cb-overlay" role="dialog" aria-label="Cookie consent">
+        <div className="cb-banner">
+          <div className="cb-head">
+            <div className="cb-head-icon">
+              <Cookie size={18} />
+            </div>
+            <div className="cb-head-text">
+              <strong>We use cookies</strong>
+              <p>
+                We use strictly necessary cookies to run our site, and optional
+                cookies to improve your experience and analyse traffic.{" "}
+                <a href="/cookie-policy">Cookie Policy</a>
+              </p>
+            </div>
+          </div>
+
+          {showDetails && (
+            <div className="cb-prefs">
+              <div className="cb-prefs-header">
+                <span>Manage preferences</span>
               </div>
-            ))}
-          </div>
-        )}
+              {BANNER_COOKIES.map((c) => (
+                <div key={c.key} className="cb-pref-row">
+                  <div className="cb-pref-info">
+                    <span className="cb-pref-label">{c.label}</span>
+                    <span className="cb-pref-desc">{c.desc}</span>
+                  </div>
+                  <Toggle
+                    on={prefs[c.key]}
+                    locked={c.locked}
+                    onChange={() =>
+                      setPrefs((p) => ({ ...p, [c.key]: !p[c.key] }))
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
-        <div className="cb-actions">
-          <button
-            className="cb-btn cb-btn-ghost"
-            onClick={() => setShowDetails((s) => !s)}
-          >
-            <Settings2 size={14} />
-            {showDetails ? "Hide options" : "Manage preferences"}
-          </button>
-          <div className="cb-btn-group">
+          <div className="cb-actions">
             <button
-              className="cb-btn cb-btn-outline"
-              onClick={() => save(false)}
+              className="cb-manage"
+              onClick={() => setShowDetails((s) => !s)}
             >
-              {showDetails ? "Save my choices" : "Reject optional"}
+              <Settings2 size={14} />
+              {showDetails ? "Hide options" : "Manage preferences"}
             </button>
-            <button
-              className="cb-btn cb-btn-primary"
-              onClick={() => save(true)}
-            >
-              Accept all
-            </button>
+            <div className="cb-btns">
+              <button className="cb-btn-reject" onClick={() => save(false)}>
+                {showDetails ? "Save my choices" : "Reject optional"}
+              </button>
+              <button className="cb-btn-accept" onClick={() => save(true)}>
+                Accept all
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -272,7 +469,7 @@ export default function CookiePolicyPage() {
             can control them.
           </p>
           <p className="cp-updated">
-            Last updated: 4 June 2025 · Applies to caregivernetwork.co.uk
+            Last updated: 4 June 2025 · Applies to carejobsuk.co.uk
           </p>
         </div>
         <div className="cp-hero-dots" aria-hidden="true">
@@ -469,7 +666,7 @@ export default function CookiePolicyPage() {
             please contact our Data Protection Officer:
           </p>
           <p>
-            <strong>Email:</strong> privacy@caregivernetwork.co.uk
+            <strong>Email:</strong> privacy@carejobsuk.co.uk
             <br />
             <strong>ICO Registration:</strong> ZB123456 (placeholder)
             <br />
@@ -863,180 +1060,6 @@ export default function CookiePolicyPage() {
 
         .cp-contact a:hover { text-decoration: underline; }
 
-        /* ── Cookie Banner ──────────────────────────────────────── */
-        .cb-overlay {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          z-index: 9999;
-          padding: 16px;
-          display: flex;
-          justify-content: center;
-          pointer-events: none;
-        }
-
-        .cb-banner {
-          pointer-events: all;
-          background: white;
-          border: 1px solid #e2e8f0;
-          border-radius: 14px;
-          box-shadow: 0 8px 40px rgba(0,0,0,0.14);
-          padding: 20px;
-          max-width: 680px;
-          width: 100%;
-          font-family: 'DM Sans', sans-serif;
-        }
-
-        .cb-top {
-          display: flex;
-          gap: 14px;
-          align-items: flex-start;
-          margin-bottom: 16px;
-        }
-
-        .cb-icon {
-          flex-shrink: 0;
-          width: 36px;
-          height: 36px;
-          background: #eff6ff;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #0c3b6e;
-        }
-
-        .cb-text strong {
-          display: block;
-          font-size: 0.9375rem;
-          font-weight: 700;
-          color: #1e293b;
-          margin-bottom: 4px;
-        }
-
-        .cb-text p {
-          font-size: 0.8375rem;
-          color: #64748b;
-          margin: 0;
-          line-height: 1.6;
-        }
-
-        .cb-text a { color: #0c3b6e; font-weight: 500; }
-
-        .cb-details {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
-          border-radius: 10px;
-          padding: 12px;
-          margin-bottom: 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .cb-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-        }
-
-        .cb-row-info { flex: 1; }
-
-        .cb-row-label {
-          display: block;
-          font-size: 0.8375rem;
-          font-weight: 600;
-          color: #1e293b;
-        }
-
-        .cb-row-desc {
-          display: block;
-          font-size: 0.775rem;
-          color: #94a3b8;
-          margin-top: 2px;
-        }
-
-        .cb-toggle {
-          width: 40px;
-          height: 22px;
-          background: #e2e8f0;
-          border-radius: 99px;
-          position: relative;
-          cursor: pointer;
-          transition: background 0.2s;
-          flex-shrink: 0;
-        }
-
-        .cb-toggle.on { background: #0c3b6e; }
-        .cb-toggle.locked { background: #16a34a; cursor: not-allowed; opacity: 0.8; }
-
-        .cb-toggle-knob {
-          position: absolute;
-          top: 3px;
-          left: 3px;
-          width: 16px;
-          height: 16px;
-          background: white;
-          border-radius: 50%;
-          transition: transform 0.2s;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        .cb-toggle.on .cb-toggle-knob,
-        .cb-toggle.locked .cb-toggle-knob {
-          transform: translateX(18px);
-        }
-
-        .cb-actions {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
-
-        .cb-btn-group { display: flex; gap: 8px; }
-
-        .cb-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 16px;
-          border-radius: 8px;
-          font-size: 0.8375rem;
-          font-weight: 600;
-          cursor: pointer;
-          border: 1px solid transparent;
-          font-family: inherit;
-          transition: all 0.15s;
-          white-space: nowrap;
-        }
-
-        .cb-btn-ghost {
-          background: none;
-          color: #64748b;
-          border-color: transparent;
-        }
-
-        .cb-btn-ghost:hover { color: #0c3b6e; background: #f1f5f9; }
-
-        .cb-btn-outline {
-          background: white;
-          color: #1e293b;
-          border-color: #e2e8f0;
-        }
-
-        .cb-btn-outline:hover { border-color: #94a3b8; }
-
-        .cb-btn-primary {
-          background: #0c3b6e;
-          color: white;
-          border-color: #0c3b6e;
-        }
-
-        .cb-btn-primary:hover { background: #0f4c81; }
       `}</style>
     </div>
   );
