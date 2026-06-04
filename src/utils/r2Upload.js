@@ -17,24 +17,49 @@ const WORKER_ENDPOINT = import.meta.env.VITE_R2_PRESIGN_ENDPOINT;
  * @param {function} onProgress  - optional callback(percent: number)
  * @returns {Promise<string>}    - Public URL of the uploaded file
  */
-export async function uploadToR2(file, userId, docType) {
-  const params = new URLSearchParams({ userId, docType, fileName: file.name });
-  
-  const res = await fetch(`${WORKER_ENDPOINT}?${params}`, {
+export async function uploadToR2(file, userId, docType, onProgress) {
+  // Step 1: Get presigned URL from worker (JSON body, not query params)
+  const presignRes = await fetch(`${WORKER_ENDPOINT}`, {
     method: 'POST',
-    headers: { 'Content-Type': file.type },
-    body: file,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId,
+      docType,
+      fileName: file.name,
+      fileType: file.type,
+      fileSize: file.size,
+    }),
   });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || 'Upload failed');
+  if (!presignRes.ok) {
+    const err = await presignRes.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to get upload URL');
   }
 
-  const { publicUrl } = await res.json();
+  const { uploadUrl, publicUrl } = await presignRes.json();
+
+  // Step 2: PUT file directly to R2 using presigned URL (XHR for progress)
+  await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', uploadUrl);
+    xhr.setRequestHeader('Content-Type', file.type);
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
+
+    xhr.onload = () =>
+      xhr.status === 200
+        ? resolve()
+        : reject(new Error(`Upload failed with status ${xhr.status}`));
+    xhr.onerror = () => reject(new Error('Network error during upload'));
+    xhr.send(file);
+  });
+
   return publicUrl;
 }
-
 // ── Client-side validation (fast feedback before hitting the Worker) ──
 
 export const ALLOWED_TYPES = {

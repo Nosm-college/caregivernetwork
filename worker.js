@@ -96,6 +96,7 @@ if (request.method === 'POST' && url.pathname === '/api/r2/upload') {
   },
 };
 async function handleUpload(request, env, cors) {
+ const url = new URL(request.url); // ← add this line
   const docType = url.searchParams.get('docType');
   const userId = url.searchParams.get('userId');
   const fileName = url.searchParams.get('fileName');
